@@ -30,7 +30,6 @@ class Database:
         self._inorder(tree.root)
 
     print("\n----------------------")
-    # ---------------- CREATE TABLE ----------------
     def create_table(self, name):
 
         if name in self.tables:
@@ -44,7 +43,6 @@ class Database:
 
         print(f"Table '{name}' created")
 
-    # ---------------- INSERT ----------------
     def insert(self, table, key, value):
 
         if table not in self.tables:
@@ -55,12 +53,10 @@ class Database:
 
         tree.root = tree.insert(tree.root, key, value)
 
-        # cache update
         self.cache.put((table, key), value)
 
         print("Inserted")
 
-    # ---------------- SELECT ----------------
     def select(self, table, key):
 
         if table not in self.tables:
@@ -69,13 +65,11 @@ class Database:
 
         cache_key = (table, key)
 
-        # CACHE HIT
         cached = self.cache.get(cache_key)
         if cached != -1:
             print("CACHE HIT")
             return cached
 
-        # CACHE MISS → AVL lookup
         tree = self.tables[table]
 
         node = tree.search(tree.root, key)
@@ -86,7 +80,6 @@ class Database:
 
         return None
 
-    # ---------------- UPDATE ----------------
     def update(self, table, key, value):
 
         if table not in self.tables:
@@ -100,14 +93,12 @@ class Database:
         if node:
             node.value = value
 
-            # update cache too
             self.cache.put((table, key), value)
 
             print("Updated")
         else:
             print("Record not found")
 
-    # ---------------- DELETE ----------------
     def delete(self, table, key):
 
         if table not in self.tables:
@@ -118,7 +109,6 @@ class Database:
 
         tree.root = tree.delete(tree.root, key)
 
-        # remove from cache safely
         try:
             del self.cache.hashmap[(table, key)]
         except KeyError:
@@ -126,7 +116,6 @@ class Database:
 
         print("Deleted")
 
-    # ---------------- SHOW TABLES ----------------
     def show_tables(self):
 
         if not self.tables:
