@@ -1,66 +1,139 @@
 from AVL import AVLTree
 from LRU import LRUCache
 
+
 class Database:
 
     def __init__(self, cache_capacity=5):
-
-        self.tree = AVLTree()
-        self.root = None
-
+        self.tables = {}
         self.cache = LRUCache(cache_capacity)
-    
-    def insert(self, key, value):
+    def _inorder(self, node):
 
-        self.root = self.tree.insert(
-            self.root,
-            key,
-            value
-        )
+        if node is None:
+            return
 
-        self.cache.put(key, value)
+        self._inorder(node.left)
+
+        print(f"ID: {node.key} | Data: {node.value}")
+
+        self._inorder(node.right)
+    def show_table(self, table):
+
+        if table not in self.tables:
+            print("Table does not exist")
+            return
+
+        tree = self.tables[table]
+
+        print(f"\n--- Table: {table} ---")
+
+        self._inorder(tree.root)
+
+    print("\n----------------------")
+    # ---------------- CREATE TABLE ----------------
+    def create_table(self, name):
+
+        if name in self.tables:
+            print("Table already exists")
+            return
+
+        tree = AVLTree()
+        tree.root = None
+
+        self.tables[name] = tree
+
+        print(f"Table '{name}' created")
+
+    # ---------------- INSERT ----------------
+    def insert(self, table, key, value):
+
+        if table not in self.tables:
+            print("Table does not exist")
+            return
+
+        tree = self.tables[table]
+
+        tree.root = tree.insert(tree.root, key, value)
+
+        # cache update
+        self.cache.put((table, key), value)
 
         print("Inserted")
-    
-    def select(self, key):
 
-        cached = self.cache.get(key)
+    # ---------------- SELECT ----------------
+    def select(self, table, key):
 
+        if table not in self.tables:
+            print("Table does not exist")
+            return None
+
+        cache_key = (table, key)
+
+        # CACHE HIT
+        cached = self.cache.get(cache_key)
         if cached != -1:
             print("CACHE HIT")
             return cached
 
-        node = self.tree.search(self.root, key)
+        # CACHE MISS → AVL lookup
+        tree = self.tables[table]
+
+        node = tree.search(tree.root, key)
 
         if node:
-            self.cache.put(key, node.value)
+            self.cache.put(cache_key, node.value)
             return node.value
 
         return None
-    def update(self, key, new_value):
 
-        node = self.tree.search(self.root, key)
+    # ---------------- UPDATE ----------------
+    def update(self, table, key, value):
+
+        if table not in self.tables:
+            print("Table does not exist")
+            return
+
+        tree = self.tables[table]
+
+        node = tree.search(tree.root, key)
 
         if node:
-            node.value = new_value
-            self.cache.put(key, new_value)
+            node.value = value
+
+            # update cache too
+            self.cache.put((table, key), value)
+
             print("Updated")
-
         else:
             print("Record not found")
-    
-    def delete(self, key):
 
-        node = self.tree.search(self.root, key)
+    # ---------------- DELETE ----------------
+    def delete(self, table, key):
 
-        if node:
+        if table not in self.tables:
+            print("Table does not exist")
+            return
 
-            self.root = self.tree.delete(
-                self.root,
-                key
-            )
+        tree = self.tables[table]
 
-            print("Deleted")
+        tree.root = tree.delete(tree.root, key)
 
-        else:
-            print("Record not found")
+        # remove from cache safely
+        try:
+            del self.cache.hashmap[(table, key)]
+        except KeyError:
+            pass
+
+        print("Deleted")
+
+    # ---------------- SHOW TABLES ----------------
+    def show_tables(self):
+
+        if not self.tables:
+            print("No tables created")
+            return
+
+        print("Tables:")
+
+        for name in self.tables:
+            print("-", name)

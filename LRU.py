@@ -5,7 +5,7 @@ class Node:
         self.key = key
         self.val = val
 
-class LRUCache:
+class DLL:
     def __init__(self, head = None, tail = None, used = None):
         self.head = head
         self.tail = tail
