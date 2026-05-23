@@ -11,12 +11,13 @@ class Database:
 
         if node is None:
             return
-
+        
         self._inorder(node.left)
 
         print(f"ID: {node.key} | Data: {node.value}")
 
         self._inorder(node.right)
+        
     def show_table(self, table):
 
         if table not in self.tables:

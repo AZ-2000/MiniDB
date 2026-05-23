@@ -9,25 +9,25 @@ def show_help():
 USAGE:
 
 1. CREATE TABLE <table_name>
-   e.g. CREATE TABLE users
+   e.g. CREATE TABLE students
 
-2. INSERT <table> <key> <name> <age>
-   e.g. INSERT users 1 Alice 20
+2. INSERT <table> <Student ID> <name> <age> <semester> <WAM> <Grade>
+   e.g. INSERT students 1 Alice 20 1 75.5 HD
 
-3. SELECT <table> <key>
-   e.g. SELECT users 1
+3. SELECT <table> <Student ID>
+   e.g. SELECT students 1
 
-4. UPDATE <table> <key> <name> <age>
-   e.g. UPDATE users 1 Alice 21
+4. UPDATE <table> <Student ID> <name> <age> <semester> <WAM> <Grade>
+   e.g. UPDATE students 1 Alice 21 2 80.0 D
 
-5. DELETE <table> <key>
-   e.g. DELETE users 1
+5. DELETE <table> <Student ID>
+   e.g. DELETE students 1
 
 6. SHOW TABLES
    e.g. SHOW TABLES
 
 7. SHOW TABLE <table_name>
-   e.g. SHOW TABLE patient
+   e.g. SHOW TABLE students
 
 8. HELP
 
