@@ -7,6 +7,7 @@ class Database:
     def __init__(self, cache_capacity=5):
         self.tables = {}
         self.cache = LRUCache(cache_capacity)
+        
     def _inorder(self, node):
 
         if node is None:
@@ -17,7 +18,7 @@ class Database:
         print(f"ID: {node.key} | Data: {node.value}")
 
         self._inorder(node.right)
-        
+
     def show_table(self, table):
 
         if table not in self.tables:
