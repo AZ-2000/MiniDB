@@ -4,10 +4,10 @@ from LRU import LRUCache
 
 class Database:
 
-    def __init__(self, cache_capacity=50):
+    def __init__(self, cache_capacity=5):
         self.tables = {}
         self.cache = LRUCache(cache_capacity)
-
+        
     def _inorder(self, node):
 
         if node is None:
@@ -52,12 +52,15 @@ class Database:
             return
 
         tree = self.tables[table]
+        if tree.search(tree.root, key):
+            print("Duplicate key found!")
+        else:
+            tree.root = tree.insert(tree.root, key, value)
 
-        tree.root = tree.insert(tree.root, key, value)
 
-        self.cache.put((table, key), value)
-
-        print("Inserted")
+            self.cache.put((table, key), value)
+            print("CACHE: ", self.cache.hashmap)
+            print("Inserted")
 
     def select(self, table, key):
 
@@ -69,7 +72,7 @@ class Database:
 
         cached = self.cache.get(cache_key)
         if cached != -1:
-            print("This result was cached")
+            print("CACHE HIT")
             return cached
 
         tree = self.tables[table]

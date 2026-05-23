@@ -23,7 +23,7 @@ class AVLTree:
         
     def right_rotate(self, z):
         y = z.left
-        T3 = z.right
+        T3 = y.right
         y.right = z
         z.left = T3
 
@@ -34,7 +34,7 @@ class AVLTree:
 
     def left_rotate(self, z):
         y = z.right
-        T3 = z.left
+        T3 = y.left
         y.left = z
         z.right = T3
         z.height = 1 + max(self.get_height(z.left), self.get_height(z.right))
@@ -50,8 +50,7 @@ class AVLTree:
         elif key > root.key:
             root.right = self.insert(root.right, key, value)
         else:
-            print("Duplicate key found!")
-            return
+            return root
         root.height = 1 + max(self.get_height(root.left), self.get_height(root.right))
         balance = self.get_balance(root)
 
