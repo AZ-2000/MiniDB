@@ -4,7 +4,7 @@ from LRU import LRUCache
 
 class Database:
 
-    def __init__(self, cache_capacity=5):
+    def __init__(self, cache_capacity=50):
         self.tables = {}
         self.cache = LRUCache(cache_capacity)
 
@@ -52,9 +52,6 @@ class Database:
             return
 
         tree = self.tables[table]
-        if tree.search(tree.root, key) is not None:
-            print("Error: Duplicate key")
-            return
 
         tree.root = tree.insert(tree.root, key, value)
 
@@ -72,7 +69,7 @@ class Database:
 
         cached = self.cache.get(cache_key)
         if cached != -1:
-            print("CACHE HIT")
+            print("This result was cached")
             return cached
 
         tree = self.tables[table]
