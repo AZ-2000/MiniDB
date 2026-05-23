@@ -38,7 +38,7 @@ show_help()
 allowed_grades = {"HD", "D", "C", "P", "F"}
 while True:
 
-    command = input("db > ").strip()
+    command = input("MINIDB COMMAND > ").strip()
     parts = command.split()
 
     if len(parts) == 0:
