@@ -38,7 +38,7 @@ USAGE:
     
 db = Database()
 show_help()
-
+allowed_grades = {"HD", "D", "C", "P", "F"}
 while True:
 
     command = input("db > ").strip()
@@ -49,74 +49,139 @@ while True:
 
     cmd = parts[0].upper()
 
-    if cmd == "CREATE" and len(parts) >= 3 and parts[1].upper() == "TABLE":
-        table = parts[2]
-        db.create_table(table)
+    if cmd == "CREATE":
+        if len(parts) == 3 and parts[1].upper() == "TABLE":
+            table = parts[2]
+            db.create_table(table)
+        else:
+            print("Usage: CREATE TABLE <table_name>")
 
-    elif parts[0] == "INSERT":
+    
 
-        table = parts[1]
-        key = int(parts[2])
+    elif cmd == "INSERT":
 
-        age = int(parts[-1])
-        name = " ".join(parts[3:-1])
-
-        db.insert(
-            table,
-            key,
-            {
-                "name": name,
-                "age": age
-            }
-        )
-
-    elif cmd == "SELECT":
-        if len(parts) < 3:
-            print("Usage: SELECT <table> <key>")
+        if len(parts) != 8:
+            print("Usage: INSERT <table> <Student ID> <name> <age> <semester> <WAM> <Grade>")
             continue
 
-        table = parts[1]
-        key = int(parts[2])
+        try:
+            table = parts[1]
+            key = int(parts[2])
 
-        result = db.select(table, key)
-        print(result)
+            name = " ".join(parts[3:-4])
+            grade = parts[-1]
+            WAM = float(parts[-2])
+            semester = int(parts[-3])
+            age = int(parts[-4])
 
-    elif parts[0] == "UPDATE":
+        except ValueError:
+            print("Invalid input: ID/age/semester must be int and WAM must be float")
+            continue       
+        grade = parts[-1]
 
-        table = parts[1]
-        key = int(parts[2])
+        if grade not in allowed_grades:
+            print(f"Error: Grade must be one of {allowed_grades}")
+            continue
+        db.insert(
+                table,
+                key,
+                {
+                    "name": name,
+                    "age": age,
+                    "semester": semester,
+                    "WAM": WAM,
+                    "Grade": grade
+                }
+            )
+        
 
-        age = int(parts[-1])
-        name = " ".join(parts[3:-1])
+
+    elif cmd == "UPDATE":
+
+        if len(parts) < 8:
+            print("Usage: UPDATE <table> <Student ID> <name> <age> <semester> <WAM> <Grade>")
+            continue
+
+        try:
+            table = parts[1]
+            key = int(parts[2])
+
+            name = " ".join(parts[3:-4])
+            age = int(parts[-4])
+            semester = int(parts[-3])
+            WAM = float(parts[-2])
+            grade = parts[-1]
+
+        except ValueError:
+            print("Invalid input: ID/age/semester must be int and WAM must be float")
+            continue
+
+        if grade not in allowed_grades:
+            print(f"Error: Grade must be one of {allowed_grades}")
+            continue
 
         db.update(
             table,
             key,
             {
                 "name": name,
-                "age": age
+                "age": age,
+                "semester": semester,
+                "WAM": WAM,
+                "Grade": grade
             }
         )
-    elif parts[0] == "SHOW" and parts[1] == "TABLE":
+
+  
+    
+    elif cmd == "SHOW" and len(parts) >= 2 and parts[1].upper() == "TABLE":
+
+        if len(parts) < 3:
+            print("Usage: SHOW TABLE <table_name>")
+            continue
 
         table = parts[2]
         db.show_table(table)
-
-    elif cmd == "DELETE":
-        if len(parts) < 3:
-            print("Usage: DELETE <table> <key>")
-            continue
-
-        table = parts[1]
-        key = int(parts[2])
-
-        db.delete(table, key)
-
+        
     elif cmd == "SHOW":
         if len(parts) >= 2 and parts[1].upper() == "TABLES":
             db.show_tables()
         else:
             print("Usage: SHOW TABLES")
+
+    elif cmd == "DELETE":
+
+        if len(parts) < 3:
+            print("Usage: DELETE <table> <key>")
+            continue
+
+        try:
+            table = parts[1]
+            key = int(parts[2])
+
+            db.delete(table, key)
+
+        except ValueError:
+            print("Key must be an integer")
+
+    elif cmd == "SELECT":
+
+        if len(parts) < 3:
+            print("Usage: SELECT <table> <key>")
+            continue
+
+        try:
+            table = parts[1]
+            key = int(parts[2])
+
+            result = db.select(table, key)
+            if result is None:
+                print("Record not found")
+            else:
+                print(result)
+
+        except ValueError:
+            print("Key must be an integer")
 
     elif cmd == "HELP":
         show_help()

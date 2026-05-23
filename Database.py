@@ -50,6 +50,9 @@ class Database:
             return
 
         tree = self.tables[table]
+        if tree.search(tree.root, key) is not None:
+            print("Error: Duplicate key")
+            return
 
         tree.root = tree.insert(tree.root, key, value)
 
