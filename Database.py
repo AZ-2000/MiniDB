@@ -7,7 +7,7 @@ class Database:
     def __init__(self, cache_capacity=5):
         self.tables = {}
         self.cache = LRUCache(cache_capacity)
-        
+
     def _inorder(self, node):
 
         if node is None:
@@ -31,7 +31,7 @@ class Database:
 
         self._inorder(tree.root)
 
-    print("\n----------------------")
+        print("\n----------------------")
     def create_table(self, name):
 
         if name in self.tables:
