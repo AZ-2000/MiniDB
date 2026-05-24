@@ -10,18 +10,27 @@ class Node:
 class AVLTree:
 
     def get_height(self, node):
+        """
+         Gets the height of the AVL tree
+        """
         if node:
             return node.height
         else:
             return 0
         
     def get_balance(self, node):
+        """
+         Performs balancing operations on the BST
+        """
         if node:
             return self.get_height(node.left) - self.get_height(node.right)
         else:
             return 0
         
     def right_rotate(self, z):
+        """
+         Performs a Right rotation
+        """
         y = z.left
         T3 = y.right
         y.right = z
@@ -33,6 +42,9 @@ class AVLTree:
         return y
 
     def left_rotate(self, z):
+        """
+         Performs a left Rotation
+        """
         y = z.right
         T3 = y.left
         y.left = z
@@ -43,6 +55,10 @@ class AVLTree:
         return y
 
     def insert(self, root, key, value):
+        """
+         Inserts value into the AVL tree and rebalances the tree
+         to maintain efficient lookup retrieval
+        """
         if not root:
             return Node(key, value)
         if key < root.key:
@@ -70,12 +86,19 @@ class AVLTree:
 
 
     def get_min_value_node(self, root):
+        """
+        Gets the minimum value in the tree
+        """
         current = root
         while current.left:
             current = current.left
         return current
     
     def delete(self, root, key):
+        """
+         Deletes value from the AVL tree and rebalances the tree
+         to maintain efficient lookup retrieval
+        """
         if root is None:
             return 
         else:
@@ -113,6 +136,10 @@ class AVLTree:
 
 
     def inorder(self, root):
+        """
+         Performs inorder traversal  on the tree which will print values
+         stored in the database in the order they were inserted
+        """
         if not root:
             return 
         else:
@@ -121,6 +148,7 @@ class AVLTree:
             self.inorder(root.right)
     
     def search(self, root, key):
+        """ Performs search operation for a specific key """
         if root is None:
             return 
         else:

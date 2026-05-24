@@ -3,24 +3,24 @@ from LRU import LRUCache
 
 
 class Database:
+    """MiniDB using AVL trees per table + LRU cache."""
 
     def __init__(self, cache_capacity=5):
+        """Initialise tables and LRU cache."""
         self.tables = {}
         self.cache = LRUCache(cache_capacity)
-        
-    def helper(self, node):
 
+    def helper(self, node):
+        """In-order traversal printer for AVL tree."""
         if node is None:
             return
-        
+
         self.helper(node.left)
-
         print(f"ID: {node.key} | Student Data: {node.value}")
-
         self.helper(node.right)
 
     def show_table(self, table):
-
+        """Print all records in a table."""
         if table not in self.tables:
             print("Table does not exist")
             return
@@ -28,42 +28,39 @@ class Database:
         tree = self.tables[table]
 
         print(f"\n--- Table: {table} ---")
-
         self.helper(tree.root)
-
         print("\n----------------------")
-    def create_table(self, name):
 
+    def create_table(self, name):
+        """Create a new empty table."""
         if name in self.tables:
             print("Table already exists")
             return
 
         tree = AVLTree()
         tree.root = None
-
         self.tables[name] = tree
 
         print(f"Table '{name}' created")
 
     def insert(self, table, key, value):
-
+        """Insert a record into a table."""
         if table not in self.tables:
             print("Table does not exist")
             return
 
         tree = self.tables[table]
+
         if tree.search(tree.root, key):
             print("Duplicate key found!")
         else:
             tree.root = tree.insert(tree.root, key, value)
-
-
             self.cache.put((table, key), value)
             print("CACHE: ", self.cache.hashmap)
             print("Inserted")
 
     def select(self, table, key):
-
+        """Retrieve a record (uses cache if available)."""
         if table not in self.tables:
             print("Table does not exist")
             return None
@@ -76,7 +73,6 @@ class Database:
             return cached
 
         tree = self.tables[table]
-
         node = tree.search(tree.root, key)
 
         if node:
@@ -86,32 +82,28 @@ class Database:
         return None
 
     def update(self, table, key, value):
-
+        """Update a record in a table."""
         if table not in self.tables:
             print("Table does not exist")
             return
 
         tree = self.tables[table]
-
         node = tree.search(tree.root, key)
 
         if node:
             node.value = value
-
             self.cache.put((table, key), value)
-
             print("Updated")
         else:
             print("Record not found")
 
     def delete(self, table, key):
-
+        """Delete a record from a table."""
         if table not in self.tables:
             print("Table does not exist")
             return
 
         tree = self.tables[table]
-
         tree.root = tree.delete(tree.root, key)
 
         try:
@@ -122,12 +114,11 @@ class Database:
         print("Deleted")
 
     def show_tables(self):
-
+        """List all tables."""
         if not self.tables:
             print("No tables created")
             return
 
         print("Tables:")
-
         for name in self.tables:
             print("-", name)

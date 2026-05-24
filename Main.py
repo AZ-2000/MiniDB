@@ -1,6 +1,7 @@
 from Database import Database
 
 def show_help():
+    """Print available MiniDB commands."""
     print("""
 USAGE:
 
@@ -29,11 +30,18 @@ USAGE:
 
 9. EXIT
 """)
-    
+
+
 db = Database()
+"""Initialise database instance."""
+
 show_help()
+
 allowed_grades = {"HD", "D", "C", "P", "F"}
+"""Valid grade values."""
+
 while True:
+    """Main REPL loop for processing commands."""
 
     command = input("MINIDB COMMAND > ").strip()
     parts = command.split()
@@ -44,16 +52,15 @@ while True:
     cmd = parts[0].upper()
 
     if cmd == "CREATE":
+        """Create a new table."""
         if len(parts) == 3 and parts[1].upper() == "TABLE":
             table = parts[2]
             db.create_table(table)
         else:
             print("Usage: CREATE TABLE <table_name>")
 
-    
-
     elif cmd == "INSERT":
-
+        """Insert a new record into a table."""
         if len(parts) != 9:
             print("Usage: INSERT <table> <Student ID> <First name> <Last name> <age> <semester> <WAM> <Grade>")
             continue
@@ -70,30 +77,30 @@ while True:
 
         except ValueError:
             print("Invalid input: ID/age/semester must be int and WAM must be float")
-            continue       
+            continue
+
         grade = parts[-1]
 
         if grade not in allowed_grades:
             print(f"Error: Grade must be one of {allowed_grades}")
             continue
-        db.insert(
-                table,
-                key,
-                {
-                    "First Name": first_name,
-                    "Last Name": last_name,
-                    "age": age,
-                    "semester": semester,
-                    "WAM": WAM,
-                    "Grade": grade
-                }
-            )
-        
 
+        db.insert(
+            table,
+            key,
+            {
+                "First Name": first_name,
+                "Last Name": last_name,
+                "age": age,
+                "semester": semester,
+                "WAM": WAM,
+                "Grade": grade
+            }
+        )
 
     elif cmd == "UPDATE":
-
-        if len(parts)!= 9:
+        """Update an existing record."""
+        if len(parts) != 9:
             print("Usage: UPDATE <table> <Student ID> <First Name> <Last Name> <age> <semester> <WAM> <Grade>")
             continue
 
@@ -110,7 +117,9 @@ while True:
         except ValueError:
             print("Invalid input: ID/age/semester must be int and WAM must be float")
             continue
+
         grade = parts[-1]
+
         if grade not in allowed_grades:
             print(f"Error: Grade must be one of {allowed_grades}")
             continue
@@ -128,25 +137,24 @@ while True:
             }
         )
 
-  
-    
     elif cmd == "SHOW" and len(parts) >= 2 and parts[1].upper() == "TABLE":
-
+        """Show a specific table."""
         if len(parts) != 3:
             print("Usage: SHOW TABLE <table_name>")
             continue
 
         table = parts[2]
         db.show_table(table)
-        
+
     elif cmd == "SHOW":
+        """Show all tables."""
         if len(parts) == 2 and parts[1].upper() == "TABLES":
             db.show_tables()
         else:
             print("Usage: SHOW TABLES")
 
     elif cmd == "DELETE":
-
+        """Delete a record by key."""
         if len(parts) < 3:
             print("Usage: DELETE <table> <key>")
             continue
@@ -154,14 +162,13 @@ while True:
         try:
             table = parts[1]
             key = int(parts[2])
-
             db.delete(table, key)
 
         except ValueError:
             print("Key must be an integer")
 
     elif cmd == "SELECT":
-
+        """Select a record by key."""
         if len(parts) < 3:
             print("Usage: SELECT <table> <key>")
             continue
@@ -180,11 +187,14 @@ while True:
             print("Key must be an integer")
 
     elif cmd == "HELP":
+        """Display help menu."""
         show_help()
 
     elif cmd == "EXIT":
+        """Exit the database."""
         print("Shutting down database...")
         break
 
     else:
+        """Handle unknown commands."""
         print("Unknown command. Type HELP for usage.")
