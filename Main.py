@@ -9,13 +9,13 @@ USAGE:
    e.g. CREATE TABLE students
 
 2. INSERT <table> <Student ID> <First Name> <Last Name> <age> <semester> <WAM> <Grade>
-   e.g. INSERT students 1 Alice 20 1 75.5 HD
+   e.g. INSERT students 1 John Smith 20 1 75.5 HD
 
 3. SELECT <table> <Student ID>
    e.g. SELECT students 1
 
 4. UPDATE <table> <Student ID> <First Name> <Last Name> <age> <semester> <WAM> <Grade>
-   e.g. UPDATE students 1 Alice 21 2 80.0 D
+   e.g. UPDATE students 1 Alice Lee 21 2 80.0 D
 
 5. DELETE <table> <Student ID>
    e.g. DELETE students 1
