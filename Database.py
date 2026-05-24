@@ -8,16 +8,16 @@ class Database:
         self.tables = {}
         self.cache = LRUCache(cache_capacity)
         
-    def _inorder(self, node):
+    def helper(self, node):
 
         if node is None:
             return
         
-        self._inorder(node.left)
+        self.helper(node.left)
 
-        print(f"ID: {node.key} | Data: {node.value}")
+        print(f"ID: {node.key} | Student Data: {node.value}")
 
-        self._inorder(node.right)
+        self.helper(node.right)
 
     def show_table(self, table):
 
@@ -29,7 +29,7 @@ class Database:
 
         print(f"\n--- Table: {table} ---")
 
-        self._inorder(tree.root)
+        self.helper(tree.root)
 
         print("\n----------------------")
     def create_table(self, name):

@@ -2,20 +2,18 @@ from Database import Database
 
 def show_help():
     print("""
-
-
 USAGE:
 
 1. CREATE TABLE <table_name>
    e.g. CREATE TABLE students
 
-2. INSERT <table> <Student ID> <name> <age> <semester> <WAM> <Grade>
+2. INSERT <table> <Student ID> <First Name> <Last Name> <age> <semester> <WAM> <Grade>
    e.g. INSERT students 1 Alice 20 1 75.5 HD
 
 3. SELECT <table> <Student ID>
    e.g. SELECT students 1
 
-4. UPDATE <table> <Student ID> <name> <age> <semester> <WAM> <Grade>
+4. UPDATE <table> <Student ID> <First Name> <Last Name> <age> <semester> <WAM> <Grade>
    e.g. UPDATE students 1 Alice 21 2 80.0 D
 
 5. DELETE <table> <Student ID>
@@ -30,7 +28,6 @@ USAGE:
 8. HELP
 
 9. EXIT
-
 """)
     
 db = Database()
@@ -57,19 +54,19 @@ while True:
 
     elif cmd == "INSERT":
 
-        if len(parts) != 8:
-            print("Usage: INSERT <table> <Student ID> <name> <age> <semester> <WAM> <Grade>")
+        if len(parts) != 9:
+            print("Usage: INSERT <table> <Student ID> <First name> <Last name> <age> <semester> <WAM> <Grade>")
             continue
 
         try:
             table = parts[1]
             key = int(parts[2])
 
-            name = " ".join(parts[3:-4])
-            grade = parts[-1]
-            WAM = float(parts[-2])
-            semester = int(parts[-3])
-            age = int(parts[-4])
+            first_name = parts[3]
+            last_name = parts[4]
+            WAM = float(parts[7])
+            semester = int(parts[6])
+            age = int(parts[5])
 
         except ValueError:
             print("Invalid input: ID/age/semester must be int and WAM must be float")
@@ -83,7 +80,8 @@ while True:
                 table,
                 key,
                 {
-                    "name": name,
+                    "First Name": first_name,
+                    "Last Name": last_name,
                     "age": age,
                     "semester": semester,
                     "WAM": WAM,
@@ -95,24 +93,24 @@ while True:
 
     elif cmd == "UPDATE":
 
-        if len(parts) < 8:
-            print("Usage: UPDATE <table> <Student ID> <name> <age> <semester> <WAM> <Grade>")
+        if len(parts)!= 9:
+            print("Usage: UPDATE <table> <Student ID> <First Name> <Last Name> <age> <semester> <WAM> <Grade>")
             continue
 
         try:
             table = parts[1]
             key = int(parts[2])
 
-            name = " ".join(parts[3:-4])
-            age = int(parts[-4])
-            semester = int(parts[-3])
-            WAM = float(parts[-2])
-            grade = parts[-1]
+            first_name = parts[3]
+            last_name = parts[4]
+            WAM = float(parts[7])
+            semester = int(parts[6])
+            age = int(parts[5])
 
         except ValueError:
             print("Invalid input: ID/age/semester must be int and WAM must be float")
             continue
-
+        grade = parts[-1]
         if grade not in allowed_grades:
             print(f"Error: Grade must be one of {allowed_grades}")
             continue
@@ -121,7 +119,8 @@ while True:
             table,
             key,
             {
-                "name": name,
+                "First Name": first_name,
+                "Last Name": last_name,
                 "age": age,
                 "semester": semester,
                 "WAM": WAM,
