@@ -132,7 +132,7 @@ while True:
     
     elif cmd == "SHOW" and len(parts) >= 2 and parts[1].upper() == "TABLE":
 
-        if len(parts) < 3:
+        if len(parts) != 3:
             print("Usage: SHOW TABLE <table_name>")
             continue
 
@@ -140,7 +140,7 @@ while True:
         db.show_table(table)
         
     elif cmd == "SHOW":
-        if len(parts) >= 2 and parts[1].upper() == "TABLES":
+        if len(parts) == 2 and parts[1].upper() == "TABLES":
             db.show_tables()
         else:
             print("Usage: SHOW TABLES")
