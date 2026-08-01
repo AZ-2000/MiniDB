@@ -3,6 +3,7 @@ import time
 from Database import Database
 from lldb import LinkedListDatabase
 import matplotlib.pyplot as plt
+import os
 
 results = {
     "sizes": [],
@@ -42,12 +43,12 @@ def timer(function):
     return end - start
 
 def run_benchmark(size):
-
+    if os.path.exists("database.json"):
+        os.remove("database.json")
     print(f"\n========== {size} RECORDS ==========")
 
     records = generate_records(size)
 
-    # Create databases
     avl_db = Database()
     linked_db = LinkedListDatabase()
 
@@ -55,7 +56,6 @@ def run_benchmark(size):
     linked_db.create_table("students")
 
 
-    # ---------------- INSERT ----------------
 
     def avl_insert():
         for key, value in records:
@@ -76,7 +76,6 @@ def run_benchmark(size):
     print(f"Linked:    {linked_insert_time:.6f}s")
 
 
-    # ---------------- SEARCH ----------------
 
     search_keys = random.sample(range(size), min(size, 1000))
 
@@ -99,9 +98,6 @@ def run_benchmark(size):
     print(f"AVL + LRU: {avl_search_time:.6f}s")
     print(f"Linked:    {linked_search_time:.6f}s")
 
-
-    # ---------------- REPEATED SEARCH ----------------
-    # Shows LRU cache advantage
 
     def avl_cached_search():
 
@@ -138,7 +134,7 @@ if __name__ == "__main__":
 
     results = []
 
-    for size in [25000, 50000, 100000]:
+    for size in [1000, 2500, 5000]:
         result = run_benchmark(size)
         results.append(result)
     print(result)
@@ -165,3 +161,27 @@ if __name__ == "__main__":
     plt.legend()
     plt.grid()
     plt.show()
+
+    plt.figure()
+
+    plt.plot(
+        sizes,
+        [r["search_avl"] for r in results],
+        marker="o",
+        label="AVL + LRU"
+    )
+
+    plt.plot(
+        sizes,
+        [r["search_linked"] for r in results],
+        marker="o",
+        label="Linked List"
+    )
+
+    plt.xlabel("Number of Records")
+    plt.ylabel("Time (seconds)")
+    plt.title("Search Performance")
+    plt.legend()
+    plt.grid()
+    plt.show()
+
