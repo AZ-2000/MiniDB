@@ -185,3 +185,27 @@ if __name__ == "__main__":
     plt.grid()
     plt.show()
 
+    plt.figure()
+
+    plt.plot(
+        sizes,
+        [r["cache_avl"] for r in results],
+        marker="o",
+        label="AVL + LRU Cache"
+    )
+
+    plt.plot(
+        sizes,
+        [r["cache_linked"] for r in results],
+        marker="o",
+        label="Linked List"
+    )
+
+    plt.xlabel("Number of Records")
+    plt.ylabel("Time (seconds)")
+    plt.title("Repeated Search Performance")
+    plt.legend()
+    plt.grid()
+
+    plt.show()
+

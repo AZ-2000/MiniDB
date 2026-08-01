@@ -125,43 +125,43 @@ MiniDB/
 
 ---
 
-## Performance Evaluation
+## Performance
 
-MiniDB was benchmarked against an equivalent database implemented using a linked list.
-
-### Insert Performance
-
-| Records | AVL + Storage | Linked List |
-|---------:|--------------:|------------:|
-| 1,000 | 2.09 s | 0.013 s |
-| 2,500 | 12.96 s | 0.080 s |
-| 5,000 | 49.64 s | 0.319 s |
-
-The linked list performs faster inserts because new nodes are added to the front in O(1) time, whereas MiniDB performs AVL tree balancing and persists each write to disk. This benchmark reflects the additional work required to provide indexing, persistence, and transactional guarantees.
-
----
+MiniDB was benchmarked against an equivalent database implementation using a linked list for indexing.
 
 ### Search Performance
 
-| Records | AVL + LRU | Linked List | Improvement |
-|---------:|----------:|------------:|------------:|
-| 1,000 | 0.00175 s | 0.02541 s | **14.5× faster** |
-| 2,500 | 0.00176 s | 0.03311 s | **18.8× faster** |
-| 5,000 | 0.00198 s | 0.06492 s | **32.8× faster** |
+Search operations remained consistently fast as the dataset grew, demonstrating the logarithmic lookup performance of the AVL tree.
 
-AVL Tree indexing provides logarithmic search complexity, allowing lookup performance to scale significantly better than a linear linked list.
+![Search Performance](assets/search_performance.png)
+
+**Benchmark Results**
+
+| Records | MiniDB (AVL + LRU) | Linked List | Improvement |
+|---------:|-------------------:|------------:|------------:|
+| 1,000 | 0.001514 s | 0.011904 s | **87.3% faster** |
+| 2,500 | 0.001883 s | 0.031203 s | **94.0% faster** |
+| 5,000 | 0.002163 s | 0.063173 s | **96.6% faster** |
 
 ---
 
-### Repeated Search Performance (Cache)
+### Repeated Search Performance
 
-| Records | AVL + Cache | Linked List | Improvement |
-|---------:|------------:|------------:|------------:|
-| 1,000 | 0.038 s | 1.342 s | **35× faster** |
-| 2,500 | 0.037 s | 3.190 s | **86× faster** |
-| 5,000 | 0.037 s | 6.444 s | **174× faster** |
+Frequently accessed records benefit from the LRU cache, allowing repeated lookups to avoid traversing the AVL tree entirely.
 
-Repeated queries benefit from the LRU cache, which serves cached records in O(1) time without traversing the AVL Tree.
+![Repeated Search Performance](assets/repeated_search_performance.png)
+
+**Benchmark Results**
+
+| Records | MiniDB (AVL + LRU Cache) | Linked List | Improvement |
+|---------:|-------------------------:|------------:|------------:|
+| 1,000 | 0.035264 s | 1.162153 s | **97.0% faster** |
+| 2,500 | 0.037352 s | 3.096912 s | **98.8% faster** |
+| 5,000 | 0.037363 s | 6.123037 s | **99.4% faster** |
+
+---
+
+These benchmarks demonstrate the effectiveness of combining AVL tree indexing with an LRU cache. AVL trees maintain efficient O(log n) search performance as the dataset grows, while the LRU cache provides near-constant-time access for frequently queried records, significantly reducing repeated lookup times.
 
 ---
 
