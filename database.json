@@ -1,0 +1,28 @@
+{
+    "students": [
+        {
+            "key": 1,
+            "value": {
+                "name": "John",
+                "age": 20,
+                "WAM": 85
+            }
+        },
+        {
+            "key": 2,
+            "value": {
+                "name": "Alice",
+                "age": 21,
+                "WAM": 92
+            }
+        },
+        {
+            "key": 3,
+            "value": {
+                "name": "Bob",
+                "age": 19,
+                "WAM": 76
+            }
+        }
+    ]
+}
